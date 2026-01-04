@@ -1,0 +1,139 @@
+:root {
+    --bg-dark: #0b0e11;
+    --card-glass: rgba(255, 255, 255, 0.04);
+    --neon-green: #00ff88;
+    --text-main: #e0e0e0;
+    --sidebar-width: 260px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; transition: 0.2s ease; }
+
+body { 
+    font-family: 'Inter', system-ui, sans-serif; 
+    background: var(--bg-dark); 
+    color: var(--text-main); 
+    height: 100vh;
+    overflow: hidden; 
+}
+
+.app-shell { 
+    display: flex; 
+    height: 100vh; 
+    width: 100vw; 
+}
+
+.sidebar { 
+    width: var(--sidebar-width); 
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px 20px; 
+    display: flex; 
+    flex-direction: column; 
+    flex-shrink: 0;
+}
+
+.portal-brand { color: var(--neon-green); font-weight: 800; font-size: 20px; margin-bottom: 40px; }
+
+.nav-group { flex-grow: 1; }
+
+.nav-link { 
+    color: #888; text-decoration: none; padding: 14px 18px; 
+    display: block; border-radius: 12px; margin-bottom: 8px; font-size: 15px;
+}
+
+.nav-link.active, .nav-link:hover { background: var(--card-glass); color: var(--neon-green); }
+
+.main-view { 
+    flex: 1; display: flex; flex-direction: column; 
+    overflow-y: auto; background: radial-gradient(circle at top right, #141d1a, #0b0e11);
+}
+
+.container { padding: 60px; width: 100%; max-width: 1600px; }
+
+.glass-card { 
+    background: var(--card-glass); border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px; padding: 35px; margin-top: 20px;
+}
+
+.modern-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.modern-table th { text-align: left; padding: 15px; color: #666; font-size: 13px; border-bottom: 1px solid #333; }
+.modern-table td { padding: 18px 15px; border-bottom: 1px solid #222; font-size: 15px; }
+
+.neon-btn {
+    background: var(--neon-green); color: #000; padding: 12px 24px;
+    border: none; border-radius: 10px; font-weight: 700; cursor: pointer;
+}
+
+.sign-out-btn {
+    background: transparent; border: 1px solid #444; color: #888;
+    padding: 14px; border-radius: 12px; cursor: pointer; width: 100%; margin-top: auto;
+}
+
+.sign-out-btn:hover { border-color: #ff4444; color: #ff4444; }
+
+form.glass-card input[name="subject_code"],
+form.glass-card input[name="subject_name"] {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+form.glass-card input[name="subject_code"]:focus,
+form.glass-card input[name="subject_name"]:focus {
+    outline: none;
+    border-color: var(--neon-green);
+    box-shadow: 0 0 8px var(--neon-green);
+    background: rgba(0, 255, 136, 0.05);
+}
+
+form.glass-card input[name="subject_code"]::placeholder,
+form.glass-card input[name="subject_name"]::placeholder {
+    color: rgba(224, 224, 224, 0.5);
+}
+form.glass-card select,
+form.glass-card input[type="number"] {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+form.glass-card select:focus,
+form.glass-card input[type="number"]:focus {
+    outline: none;
+    border-color: var(--neon-green);
+    box-shadow: 0 0 8px var(--neon-green);
+    background: rgba(0, 255, 136, 0.05);
+}
+
+form.glass-card input[type="number"]::placeholder {
+    color: rgba(224, 224, 224, 0.5);
+}
+
+form.glass-card button[type="submit"] {
+    background: var(--neon-green);
+    color: #000;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+form.glass-card button[type="submit"]:hover {
+    background: #00ff99;
+    box-shadow: 0 0 12px var(--neon-green);
+}
