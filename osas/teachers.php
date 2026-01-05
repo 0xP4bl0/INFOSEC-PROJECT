@@ -103,12 +103,12 @@ $conn->close();
         <div class="nav-group">
             <a class="nav-link" href="index.php">Dashboard</a>
             <a class="nav-link" href="students.php">Students</a>
-            <a class="nav-link active" href="teachers.php">Teachers</a>
+            <a class="nav-link" href="teachers.php">Teachers</a>
             <a class="nav-link" href="subjects.php">Subjects</a>
             <a class="nav-link" href="enrollments.php">Enrollments</a>
-            <a class="nav-link" href="reports.php">Reports</a>
+            <a class="nav-link" href="grades.php">Grades</a>
         </div>
-        <button class="sign-out-btn" onclick="location.href='/logout.php'">Sign Out</button>
+        <button class="sign-out-btn" onclick="location.href='/assets/logout.php'">Sign Out</button>
     </aside>
 
     <main class="main-view">

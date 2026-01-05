@@ -86,7 +86,7 @@ $conn->close();
             <a class="nav-link" href="teachers.php">Teachers</a>
             <a class="nav-link" href="subjects.php">Subjects</a>
             <a class="nav-link" href="enrollments.php">Enrollments</a>
-            <a class="nav-link" href="reports.php">Reports</a>
+            <a class="nav-link" href="grades.php">Grades</a>
         </div>
         <button class="sign-out-btn" onclick="window.location.href='/assets/logout.php'">Sign Out</button>
     </aside>
@@ -127,6 +127,10 @@ $conn->close();
                 <div class="action-card" onclick="location.href='subjects.php'">
                     <h3>Subjects</h3>
                     <p>Create and manage subject offerings</p>
+                </div>
+                <div class="action-card" onclick="location.href='grades.php'">
+                    <h3>Release Grades</h3>
+                    <p>Review and approve grade release requests</p>
                 </div>
                 <div class="action-card" onclick="location.href='reports.php'">
                     <h3>Reports</h3>

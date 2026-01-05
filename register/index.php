@@ -42,7 +42,6 @@ style="width:100%;padding:16px;background:#000;border:1px solid #333;border-radi
 <option value="teacher">Teacher</option>
 </select>
 
-<!-- STUDENT STATUS -->
 <div id="student-status-field" style="display:none;margin-bottom:15px;">
 <select name="student_status"
 style="width:100%;padding:16px;background:#000;border:1px solid #333;border-radius:12px;color:#fff;">
@@ -53,7 +52,6 @@ style="width:100%;padding:16px;background:#000;border:1px solid #333;border-radi
 </select>
 </div>
 
-<!-- DEPARTMENT -->
 <div id="department-field" style="display:none;margin-bottom:15px;">
 <input type="text" name="department" placeholder="Department"
 style="width:100%;padding:16px;background:#000;border:1px solid #333;border-radius:12px;color:#fff;">

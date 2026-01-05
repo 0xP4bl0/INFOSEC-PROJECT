@@ -1,8 +1,6 @@
 <?php
 $conn = new mysqli("localhost", "root", "", "infosec");
-
 if ($conn->connect_error) {
-    die("Connection failed");
+    die("Connection failed: " . $conn->connect_error);
 }
-$conn->set_charset("utf8mb4");
 ?>

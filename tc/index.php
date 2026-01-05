@@ -26,9 +26,9 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] !== 'teacher') {
             <a class="nav-link active" href="index.php">Dashboard</a>
             <a class="nav-link" href="my_class.php">My Classes</a>
             <a class="nav-link" href="subjects.php">Manage Subjects</a> 
+            <a class="nav-link" href="enrollment_requests.php">Enrollment Requests</a>
             <a class="nav-link" href="students.php">Students</a>
-            <a class="nav-link" href="#">Grades</a>
-            <a class="nav-link" href="#">Announcements</a>
+            <a class="nav-link" href="grades.php">Grades</a>
         </div>
 
         <button class="sign-out-btn" onclick="window.location.href='/assets/logout.php'">Sign Out</button>
