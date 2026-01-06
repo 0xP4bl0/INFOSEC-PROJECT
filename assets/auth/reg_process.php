@@ -21,6 +21,17 @@ if (!$role || !$gender || !$email || !$user_id || !$fullname || !$password || !$
     exit();
 }
 
+$passLen = strlen($password);
+if ($passLen < 8 || $passLen > 20) {
+    echo "<script>alert('Password must be between 8 and 20 characters long'); window.history.back();</script>";
+    exit();
+}
+
+if (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password)) {
+    echo "<script>alert('Password must contain both letters and numbers'); window.history.back();</script>";
+    exit();
+}
+
 if (!in_array($role, ['student', 'teacher'], true)) {
     echo "<script>alert('Invalid role selected'); window.history.back();</script>";
     exit();

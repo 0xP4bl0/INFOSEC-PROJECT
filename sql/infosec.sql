@@ -1,20 +1,9 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Jan 05, 2026 at 12:20 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+
 /*!40101 SET NAMES utf8mb4 */;
 
 --
@@ -64,10 +53,6 @@ INSERT INTO `department` (`id`, `user_id`, `department`, `created_at`) VALUES
 (4, '0923', 'CAS', '2026-01-04 05:47:59');
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `enrollments`
---
 
 CREATE TABLE `enrollments` (
   `id` int(11) NOT NULL,

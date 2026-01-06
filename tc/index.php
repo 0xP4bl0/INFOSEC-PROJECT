@@ -1,6 +1,7 @@
 <?php
 include_once '../assets/auth/auth.php';
 include '../config/db.php';
+
 if(!isset($_SESSION['role']) || $_SESSION['role'] !== 'teacher') {
     header("Location: /index.php");
     exit;
@@ -9,10 +10,10 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] !== 'teacher') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -41,52 +42,20 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] !== 'teacher') {
             <p class="subtext">
                 Manage your classes, students, and grades
             </p>
+
             <div class="glass-card">
                 <h3>Teacher Information</h3>
                 <?php
                 $teacher_id = $_SESSION['uid'];
                 $query = "SELECT u.fullname, u.email, u.user_id FROM users u WHERE u.user_id = '$teacher_id'";
                 $result = mysqli_query($conn, $query);
-                while($row = mysqli_fetch_array($result)) {
+                
+                if($row = mysqli_fetch_array($result)) {
                     echo "<p><strong>Name:</strong> " . htmlspecialchars($row['fullname']) . "</p>";
                     echo "<p><strong>Email:</strong> " . htmlspecialchars($row['email']) . "</p>";
                     echo "<p><strong>Teacher ID:</strong> " . htmlspecialchars($row['user_id']) . "</p>";
                 }
                 ?>
-
-            <div class="glass-card">
-                <h3>My Class – BSIT 3A</h3>
-
-                <table class="modern-table">
-                    <thead>
-                        <tr>
-                            <th>Student ID</th>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>2022-001</td>
-                            <td>Maria Santos</td>
-                            <td>Active</td>
-                            <td><button class="neon-btn">View</button></td>
-                        </tr>
-                        <tr>
-                            <td>2022-002</td>
-                            <td>John Reyes</td>
-                            <td>Active</td>
-                            <td><button class="neon-btn">Grade</button></td>
-                        </tr>
-                        <tr>
-                            <td>2022-003</td>
-                            <td>Ana Lopez</td>
-                            <td>Inactive</td>
-                            <td><button class="neon-btn">Message</button></td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
 
         </div>
@@ -96,3 +65,4 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] !== 'teacher') {
 
 </body>
 </html>
+<?php mysqli_close($conn); ?>

@@ -1,5 +1,6 @@
 <?php
-include '../assets/auth/auth.php';
+session_start();
+include_once '../assets/auth/auth.php';
 include '../config/db.php';
 
 if (!isset($_SESSION['user_id'], $_SESSION['role']) || $_SESSION['role'] !== 'student') {
@@ -13,7 +14,8 @@ $query = "
     SELECT s.subject_code, s.subject_name, g.grade, g.status
     FROM grades g
     JOIN subjects s ON g.subject_id = s.subject_id
-    WHERE g.student_id = ?
+    WHERE g.student_id = ? 
+    AND g.status NOT IN ('Rejected', 'Pending')
 ";
 
 $stmt = $conn->prepare($query);

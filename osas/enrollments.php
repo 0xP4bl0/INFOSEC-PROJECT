@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pending_requests = $conn->query("
-    SELECT p.id, u.fullname AS s_name, u.id AS student_db_id, s.subject_name AS sub_name, p.subject_id, t.fullname AS t_name
+    SELECT p.id, u.user_id AS student_no, u.fullname AS s_name, u.id AS student_db_id, s.subject_name AS sub_name, p.subject_id, t.fullname AS t_name
     FROM pending_enrollments p
     JOIN users u ON p.student_id = u.user_id
     JOIN subjects s ON p.subject_id = s.subject_id
@@ -95,7 +95,7 @@ $pending_requests = $conn->query("
 ")->fetch_all(MYSQLI_ASSOC);
 
 $students = $conn->query("
-    SELECT u.id, u.fullname 
+    SELECT u.id, u.user_id AS student_no, u.fullname 
     FROM users u
     LEFT JOIN student_status ss ON u.user_id = ss.user_id
     WHERE u.role = 'student' AND u.status = 'Active' 
@@ -114,7 +114,7 @@ $subjects = [];
 foreach ($subjectsRaw as $row) { $subjects[$row['teacher']][] = $row; }
 
 $enrollments = $conn->query("
-    SELECT u.fullname AS student, s.subject_name, COALESCE(t.fullname, 'Unassigned') AS teacher, COALESCE(st.status, 'Regular') AS student_type
+    SELECT u.user_id AS student_no, u.fullname AS student, s.subject_name, COALESCE(t.fullname, 'Unassigned') AS teacher, COALESCE(st.status, 'Regular') AS student_type
     FROM enrollments e 
     JOIN users u ON e.user_id = u.user_id 
     JOIN subjects s ON e.subject_id = s.subject_id 
@@ -168,14 +168,15 @@ $enrollments = $conn->query("
             <h3>Teacher Requests (Irregular/Transferee)</h3>
             <table class="modern-table">
                 <thead>
-                    <tr><th>Student</th><th>Subject</th><th>Teacher</th><th>Action</th></tr>
+                    <tr><th>Student No.</th><th>Student</th><th>Subject</th><th>Teacher</th><th>Action</th></tr>
                 </thead>
                 <tbody>
                     <?php if (empty($pending_requests)): ?>
-                        <tr><td colspan="4" style="text-align:center; padding: 20px;">No pending requests found.</td></tr>
+                        <tr><td colspan="5" style="text-align:center; padding: 20px;">No pending requests found.</td></tr>
                     <?php else: ?>
                         <?php foreach ($pending_requests as $req): ?>
                         <tr>
+                            <td><?= htmlspecialchars($req['student_no']) ?></td>
                             <td><?= htmlspecialchars($req['s_name']) ?></td>
                             <td><?= htmlspecialchars($req['sub_name']) ?></td>
                             <td><?= htmlspecialchars($req['t_name']) ?></td>
@@ -200,7 +201,7 @@ $enrollments = $conn->query("
             <select name="student_id" required>
                 <option value="" disabled selected>Select Regular Student</option>
                 <?php foreach ($students as $s): ?>
-                    <option value="<?= $s['id'] ?>"><?= htmlspecialchars($s['fullname']) ?></option>
+                    <option value="<?= $s['id'] ?>"><?= htmlspecialchars($s['student_no']) ?> - <?= htmlspecialchars($s['fullname']) ?></option>
                 <?php endforeach; ?>
             </select>
 
@@ -221,11 +222,12 @@ $enrollments = $conn->query("
             <h3>Master Enrollment List</h3>
             <table class="modern-table">
                 <thead>
-                    <tr><th>Student</th><th>Status</th><th>Subject</th><th>Teacher</th></tr>
+                    <tr><th>Student No.</th><th>Student</th><th>Status</th><th>Subject</th><th>Teacher</th></tr>
                 </thead>
                 <tbody>
                     <?php foreach ($enrollments as $e): ?>
                     <tr>
+                        <td><?= htmlspecialchars($e['student_no']) ?></td>
                         <td><?= htmlspecialchars($e['student']) ?></td>
                         <td><span class="status-badge <?= strtolower($e['student_type']) ?>"><?= htmlspecialchars($e['student_type']) ?></span></td>
                         <td><?= htmlspecialchars($e['subject_name']) ?></td>

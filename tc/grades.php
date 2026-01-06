@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../assets/auth/auth.php';
 include '../config/db.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
@@ -20,7 +21,8 @@ $query = "
     FROM grades g
     JOIN users u ON g.student_id = u.user_id
     JOIN subjects s ON g.subject_id = s.subject_id
-    WHERE g.teacher_id = ?
+    WHERE g.teacher_id = ? 
+    AND g.status != 'Rejected'
     ORDER BY s.subject_name ASC, u.fullname ASC
 ";
 
@@ -75,9 +77,7 @@ $result = $stmt->get_result();
                                     <td><?= htmlspecialchars($row['subject_name']) ?></td>
                                     <td style="font-weight: bold;"><?= number_format($row['grade'], 2) ?></td>
                                     <td>
-                                        <?php 
-                                            $color = ($row['grade_status'] === 'Passed') ? '#39ff14' : '#ff5555';
-                                        ?>
+                                        <?php $color = ($row['grade_status'] === 'Passed') ? '#39ff14' : '#ff5555'; ?>
                                         <span style="color: <?= $color ?>; font-weight: bold;">
                                             <?= htmlspecialchars($row['grade_status'] ?? 'N/A') ?>
                                         </span>

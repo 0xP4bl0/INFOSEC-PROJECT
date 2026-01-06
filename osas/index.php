@@ -132,10 +132,6 @@ $conn->close();
                     <h3>Release Grades</h3>
                     <p>Review and approve grade release requests</p>
                 </div>
-                <div class="action-card" onclick="location.href='reports.php'">
-                    <h3>Reports</h3>
-                    <p>Academic and enrollment summaries</p>
-                </div>
             </div>
         </div>
     </main>

@@ -1,6 +1,13 @@
 <?php
 session_start();
+include_once '../assets/auth/auth.php';
 include '../config/db.php';
+
+function validate_param($data, $name) {
+    if (preg_match("/[';]|--|ORDER|UNION|SELECT|DROP/i", $data)) {
+        die("Security Alert: SQL INJECTION detected in parameter '$name'");
+    }
+}
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     header("Location: /index.php");
@@ -8,11 +15,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
 }
 
 $student_user_id = $_GET['student_id'] ?? null;
-$teacher_db_id = $_SESSION['user_id'];
-
-if (!$student_user_id) {
+if ($student_user_id) {
+    validate_param($student_user_id, 'student_id');
+} else {
     die("Invalid student ID.");
 }
+
+$teacher_db_id = $_SESSION['user_id'];
 
 $stmt = $conn->prepare("
     SELECT u.user_id, u.fullname, u.gender, u.email, u.status, s.subject_name

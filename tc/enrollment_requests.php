@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_enrollment'])
 
     <main class="main-view">
         <div class="container">
-            <h1>Enrollment Requests</h1>
+            <h1>Enrollment Management</h1>
             
             <?php if ($alert): ?>
                 <div class="glass-card" style="border-left: 4px solid var(--neon-green); margin-bottom: 20px;">
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_enrollment'])
                                         <form method='POST' style='display:flex; gap:10px;'>
                                             <input type='hidden' name='request_enrollment' value='1'>
                                             <input type='hidden' name='student_user_id' value='{$sid}'>
-                                            <select name='subject_id' required class='modern-select' style='background:rgba(0,0,0,0.5); color:#fff;'>
+                                            <select name='subject_id' required class='modern-select' style='background:rgba(0,0,0,0.5); color:#fff; border-radius:5px; padding:5px;'>
                                                 <option value='' disabled selected>Select Your Subject</option>";
                                                 while($s = $subs->fetch_assoc()) {
                                                     echo "<option value='{$s['subject_id']}'>{$s['subject_name']}</option>";
@@ -133,7 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_enrollment'])
                     <thead>
                         <tr>
                             <th>Date Sent</th>
-                            <th>Student</th>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
                             <th>Subject</th>
                             <th>Status</th>
                         </tr>
@@ -141,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_enrollment'])
                     <tbody>
                         <?php
                         $history = mysqli_query($conn, "
-                            SELECT p.request_date, u.fullname, s.subject_name, p.status 
+                            SELECT p.request_date, u.user_id, u.fullname, s.subject_name, p.status 
                             FROM pending_enrollments p
                             JOIN users u ON p.student_id = u.user_id
                             JOIN subjects s ON p.subject_id = s.subject_id
@@ -152,12 +153,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_enrollment'])
                             $statusColor = ($h['status'] == 'Approved') ? '#39ff14' : (($h['status'] == 'Pending') ? '#ffa500' : '#ff5555');
                             echo "<tr>
                                 <td>" . date('M d, Y', strtotime($h['request_date'])) . "</td>
+                                <td style='color: var(--neon-green);'>" . htmlspecialchars($h['user_id']) . "</td>
                                 <td>" . htmlspecialchars($h['fullname']) . "</td>
                                 <td>" . htmlspecialchars($h['subject_name']) . "</td>
                                 <td style='color: $statusColor; font-weight: bold;'>{$h['status']}</td>
                             </tr>";
                         }
-                        if(mysqli_num_rows($history) == 0) echo "<tr><td colspan='4' style='text-align:center;'>No history found.</td></tr>";
+                        if(mysqli_num_rows($history) == 0) echo "<tr><td colspan='5' style='text-align:center;'>No history found.</td></tr>";
                         ?>
                     </tbody>
                 </table>
@@ -167,3 +169,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_enrollment'])
 </div>
 </body>
 </html>
+<?php $conn->close(); ?>

@@ -55,7 +55,7 @@ $pending_grades = $conn->query($pending_query);
 <aside class="sidebar">
     <div class="portal-brand">OSAS Portal</div>
     <div class="nav-group">
-            <a class="nav-link active" href="index.php">Dashboard</a>
+            <a class="nav-link" href="index.php">Dashboard</a>
             <a class="nav-link" href="students.php">Students</a>
             <a class="nav-link" href="teachers.php">Teachers</a>
             <a class="nav-link" href="subjects.php">Subjects</a>

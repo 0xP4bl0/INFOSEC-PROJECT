@@ -2,11 +2,27 @@
 session_start();
 include '../../config/db.php';
 
+function detect_auth_bypass($data) {
+    if (preg_match("/[';]|--|UNION|SELECT|DROP|OR\s+\d=\d/i", $data)) {
+        die("AUTH BYPASS DETECTED");
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = trim($_POST['user_id'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
+    detect_auth_bypass($user_id);
+    detect_auth_bypass($password);
+
     if ($user_id !== '' && $password !== '') {
+
+        $passLen = strlen($password);
+        if ($passLen < 8 || $passLen > 20 || !preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password)) {
+            header("Location: /login/index.php?error=Password must be 8-20 characters and contain both letters and numbers");
+            exit();
+        }
+
         $stmt = $conn->prepare("
             SELECT id, password, role, COALESCE(status, 'Inactive') AS status
             FROM users

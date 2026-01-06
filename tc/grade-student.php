@@ -1,6 +1,13 @@
 <?php
 session_start();
+include_once '../assets/auth/auth.php';
 include '../config/db.php';
+
+function validate_param($data, $name) {
+    if (preg_match("/[';]|--|UNION|SELECT|DROP/i", $data)) {
+        die("SQL INJECTION DETECTED");
+    }
+}
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     header("Location: /index.php");
@@ -8,15 +15,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
 }
 
 $student_id = $_GET['student_id'] ?? null;
+if ($student_id) {
+    validate_param($student_id, 'student_id');
+} else {
+    die("Invalid student ID.");
+}
+
 $teacher_id = $_SESSION['user_id'];
-
-if (!$student_id) die("Invalid student ID.");
-
 $alert = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subject_id = $_POST['subject_id'];
     $grade = $_POST['grade'];
+
+    validate_param($subject_id, 'subject_id');
+    validate_param($grade, 'grade');
 
     $grade_status = ($grade <= 3.0) ? 'Passed' : 'Failed';
 
@@ -33,12 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             VALUES (?, ?, ?, ?, ?, 'Pending')
             ON DUPLICATE KEY UPDATE grade = VALUES(grade), grade_status = VALUES(grade_status), status = 'Pending'
         ");
+        
         $stmt->bind_param("siids", $student_id, $subject_id, $teacher_id, $grade, $grade_status);
         
         if ($stmt->execute()) {
-            $alert = "Grade submitted ($grade_status). Release request sent to OSAS.";
+            header("Location: my_class.php?msg=Grade submitted successfully");
+            exit();
         } else {
-            $alert = "Failed to submit release request: " . $conn->error;
+            $alert = "Error: Submission failed.";
         }
         $stmt->close();
     }
@@ -57,6 +72,7 @@ $result = $stmt->get_result();
 $subjects = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,33 +83,45 @@ $stmt->close();
     <style>
         .modern-select, .grade-input {
             width: 100%; 
-            margin-top: 8px;
+            margin-top: 8px; 
             padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.05); 
             border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
+            color: #fff; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            outline: none; 
             transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-wrapper::after {
+            content: '▼';
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            position: absolute;
+            right: 15px;
+            top: 60%;
+            pointer-events: none;
         }
 
         .modern-select:focus, .grade-input:focus {
-            border-color: var(--neon-green);
+            border-color: #39ff14; 
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
         }
 
         .modern-select option {
-            background-color: #1a1a1a;
+            background-color: #121212;
             color: #fff;
-        }
-
-        label {
-            display: block;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
-            margin-top: 15px;
+            padding: 10px;
         }
     </style>
 </head>
@@ -115,18 +143,17 @@ $stmt->close();
     <main class="main-view">
         <div class="container">
             <h1>Grade Student</h1>
-            <p class="subtext">Submit a grade (1.0 - 5.0). OSAS will approve the release.</p>
-
+            
             <?php if ($alert): ?>
-                <div class="glass-card" style="border-left: 4px solid var(--neon-green); margin-bottom: 20px;">
+                <div class="glass-card" style="border-left: 4px solid #ff5555; margin-bottom: 20px;">
                     <p style="margin: 0; color: #fff;"><?= htmlspecialchars($alert) ?></p>
                 </div>
             <?php endif; ?>
 
             <div class="glass-card">
                 <form method="POST">
-                    <div>
-                        <label>Select Subject</label>
+                    <div class="select-wrapper">
+                        <label style="display:block; color:rgba(255,255,255,0.8);">Select Subject</label>
                         <select name="subject_id" required class="modern-select">
                             <option value="" disabled selected>Choose a subject</option>
                             <?php foreach ($subjects as $subject): ?>
@@ -135,13 +162,8 @@ $stmt->close();
                         </select>
                     </div>
 
-                    <div>
-                        <label>Grade (1.00 - 5.00)</label>
-                        <input type="number" name="grade" min="1.0" max="5.0" step="0.25" placeholder="e.g. 1.25" required class="grade-input">
-                        <small style="color: rgba(255,255,255,0.5); display: block; margin-top: 5px;">
-                            <strong>Note:</strong> 1.0 - 3.0 = <span style="color:var(--neon-green)">Passed</span> | 5.0 = <span style="color:#ff5555">Failed</span>
-                        </small>
-                    </div>
+                    <label style="display:block; margin-top:15px; color:rgba(255,255,255,0.8);">Grade (1.00 - 5.00)</label>
+                    <input type="number" name="grade" min="1.0" max="5.0" step="0.25" required class="grade-input">
 
                     <div style="display: flex; gap: 10px; margin-top: 30px;">
                         <button type="submit" class="neon-btn" style="flex: 1;">Request Release</button>
@@ -151,6 +173,3 @@ $stmt->close();
             </div>
         </div>
     </main>
-</div>
-</body>
-</html>

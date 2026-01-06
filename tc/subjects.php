@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../assets/auth/auth.php';
 include $_SERVER['DOCUMENT_ROOT'].'/config/db.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {

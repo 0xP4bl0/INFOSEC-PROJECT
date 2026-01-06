@@ -31,3 +31,5 @@ if (($role === 'student' || $role === 'teacher') && $status !== 'Active') {
     header("Location: /login/index.php?error=Your+account+has+been+deactivated+by+OSAS");
     exit();
 }
+
+?>

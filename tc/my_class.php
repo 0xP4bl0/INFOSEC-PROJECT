@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../assets/auth/auth.php';
 include '../config/db.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
@@ -18,7 +19,7 @@ $stmt = $conn->prepare("
         s.subject_id,
         s.subject_name,
         COALESCE(ss.status, 'Regular') AS enrollment_type,
-        MAX(g.grade) AS existing_grade
+        MAX(g.status) AS grade_release_status
     FROM enrollments e
     JOIN users u ON e.user_id = u.user_id
     JOIN subjects s ON e.subject_id = s.subject_id
@@ -91,10 +92,19 @@ $stmt->close();
                                 <td><?= htmlspecialchars($student['subject_name']) ?></td>
                                 <td style="display: flex; gap: 10px;">
                                     <a href="view-student.php?student_id=<?= urlencode($student['user_id']) ?>" class="neon-btn" style="font-size: 11px; padding: 5px 10px;">View</a>
-                                    <?php if (is_null($student['existing_grade'])): ?>
-                                        <a href="grade-student.php?student_id=<?= urlencode($student['user_id']) ?>" class="neon-btn" style="font-size: 11px; padding: 5px 10px;">Grade</a>
+                                    
+                                    <?php 
+                                        $status = $student['grade_release_status'];
+                                        $isRejected = ($status === 'Rejected');
+                                        $notGraded = (is_null($status) || $status === '');
+                                    ?>
+
+                                    <?php if ($notGraded || $isRejected): ?>
+                                        <a href="grade-student.php?student_id=<?= urlencode($student['user_id']) ?>&subject_id=<?= $student['subject_id'] ?>" class="neon-btn" style="font-size: 11px; padding: 5px 10px;">Grade</a>
                                     <?php else: ?>
-                                        <span style="color: var(--neon-green); font-size: 11px; font-weight: bold; align-self: center;">Graded</span>
+                                        <span style="color: var(--neon-green); font-size: 11px; font-weight: bold; align-self: center;">
+                                            <?= htmlspecialchars($status) ?>
+                                        </span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
